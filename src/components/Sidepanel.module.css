@@ -1,0 +1,42 @@
+.mainContainer {
+  background: #000;
+  width: 25%;
+  overflow-y: scroll;
+}
+
+.noteCard {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.152);
+  border-top: 1px solid rgba(255, 255, 255, 0.152);
+  color: rgba(255, 255, 255, 0.604);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.noteCard h4 {
+  margin: 0;
+}
+
+.noteCard:hover {
+  background: rgb(27, 27, 27);
+}
+
+.searchInput {
+  border: 1px solid #ffffff30;
+  margin: 1rem auto;
+  background: black;
+  color: rgba(255, 255, 255, 0.65);
+  display: block;
+  width: 90%;
+  border-radius: 7px;
+  outline: none;
+}
+
+.searchInput:active {
+  border-color: rgba(255, 255, 255, 0.65);
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: rgba(255, 255, 255, 0.65);
+  outline: none;
+}
