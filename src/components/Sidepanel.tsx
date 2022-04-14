@@ -1,5 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Sidepanel.module.css';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import DeleteIcon from '@mui/icons-material/Delete';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Note from '../types/note';
 
 function Sidepanel(props: any) {
   return (
@@ -10,53 +16,25 @@ function Sidepanel(props: any) {
         placeholder="Search.."
         className={styles.searchInput}
       />
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
+      <div className={styles.buttonContainer}>
+        <NoteAddIcon className={styles.icon}></NoteAddIcon>
+        <DeleteIcon className={styles.icon}></DeleteIcon>
       </div>
-      <div className={styles.noteCard}>
-        <h4>Note one row</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>This is wery cool...</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Noice!</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
-      </div>
-      <div className={styles.noteCard}>
-        <h4>Note</h4>
-        <span>22.2.2022</span>
+      <div className={styles.noteCardsContainer}>
+        {props.notes.map((note: Note) => (
+          <div
+            className={styles.noteCard}
+            onClick={() => {
+              console.log(note);
+              console.log(JSON.parse(note.note));
+              props.setActiveNote(JSON.parse(note.note));
+              props.setActiveNoteId(note.Id);
+            }}
+          >
+            <h4>{JSON.parse(note?.note)[0]?.children[0]?.text}</h4>
+            <span>{dayjs(note?.date).format('M.D.YYYY')}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import isHotkey from 'is-hotkey';
-import { Editable, withReact, useSlate, Slate } from 'slate-react';
+import { Editable, withReact, useSlate, Slate, ReactEditor } from 'slate-react';
 import {
   Editor,
   Transforms,
@@ -11,6 +11,8 @@ import {
 import { withHistory } from 'slate-history';
 
 import { Button, Icon, Toolbar } from './components';
+import axios from 'axios';
+import Note from 'types/note';
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -22,13 +24,83 @@ const HOTKEYS = {
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 
-const RichTextExample = () => {
+const RichTextExample = (props: any) => {
+  const [note, setNote] = useState();
+
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withReact(withHistory(createEditor() as ReactEditor)),
+    []
+  );
+
+  useEffect(() => {
+    if (props.activeNote) {
+      // console.log(props.activeNote[0].children[0].text + 'Ddfdfdfsfsfsfsd');
+      console.log(JSON.stringify(props?.activeNote));
+      // let test = JSON.parse(props.activeNote);
+      // renderElement(props.activeNote);
+      // console.log(test);
+      console.log(props.activeNoteId);
+      editor.children = props.activeNote;
+      setNote(props?.activeNote);
+    }
+  }, [props]);
+
+  const initialValue = useMemo<Descendant[]>(
+    () =>
+      props?.activeNote?.note || [
+        {
+          type: 'paragraph',
+          children: [{ text: 'A line of text in a paragraph.' }],
+        },
+      ],
+    []
+  );
+
+  // const initialValue = useMemo(props.activeNote, []);
+
+  // const initialValue = useMemo(
+  //   note || [
+  //     {
+  //       type: 'paragraph',
+  //       children: [{ text: 'A line of text in a paragraph.' }],
+  //     },
+  //   ],
+  //   []
+  // );
 
   return (
-    <Slate editor={editor} value={initialValue}>
+    <Slate
+      editor={editor}
+      value={initialValue}
+      onChange={(value) => {
+        const isAstChange = editor.operations.some(
+          (op) => 'set_selection' !== op.type
+        );
+        if (isAstChange) {
+          // Save the value to Local Storage.
+          const content = JSON.stringify(value);
+          localStorage.setItem('content', content);
+          axios
+            .post(
+              'http://localhost:7071/api/AddNote',
+              {
+                note: content,
+                testi: 'lol',
+                noteid: props.activeNoteId,
+              },
+              {
+                headers: {
+                  'Content-Type': 'text/plain',
+                  'Access-Control-Allow-Origin': '*',
+                },
+              }
+            )
+            .then((r) => console.log(r.data));
+        }
+      }}
+    >
       <Toolbar>
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />
@@ -231,12 +303,5 @@ const MarkButton = ({ format, icon }: any) => {
     </Button>
   );
 };
-
-const initialValue: Descendant[] = [
-  {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  },
-];
 
 export default RichTextExample;

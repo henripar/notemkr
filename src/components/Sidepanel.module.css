@@ -1,7 +1,7 @@
 .mainContainer {
   background: #000;
   width: 25%;
-  overflow-y: scroll;
+  height: 100vh;
 }
 
 .noteCard {
@@ -39,4 +39,47 @@
 .searchInput:focus {
   border-color: rgba(255, 255, 255, 0.65);
   outline: none;
+}
+
+.icon {
+  color: rgba(255, 255, 255, 0.65);
+  margin: 0 1rem;
+}
+
+.icon:hover {
+  color: white;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.noteCardsContainer {
+  overflow: scroll;
+  height: 80%;
+}
+
+.noteCard ::selection {
+  background-color: transparent !important;
+}
+
+.noteCardsContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.503) !important;
+  fill: aqua;
+  background-color: rgb(155, 28, 28);
+  border-radius: 6px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: content-box;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.noteCardsContainer::-webkit-scrollbar {
+  width: 8px;
+}
+
+.noteCardsContainer::-webkit-scrollbar-corner {
+  background: rgba(0, 0, 0, 0);
 }
