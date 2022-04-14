@@ -8,6 +8,16 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Note from '../types/note';
 
 function Sidepanel(props: any) {
+  const [selectedNote, setSeletedNote] = useState('');
+  const addActiveBg = (id: string) => {
+    let note = document.getElementById(id);
+    if (note) {
+      note.classList.add('highlightSelected');
+    }
+    let prew = document.getElementById(selectedNote);
+    prew?.classList.remove('highlightSelected');
+    setSeletedNote(id);
+  };
   return (
     <div className={styles.mainContainer}>
       <div className="titleBar"></div>
@@ -24,8 +34,10 @@ function Sidepanel(props: any) {
         {props.notes.map((note: Note) => (
           <div
             className={styles.noteCard}
+            id={note.Id}
             onClick={() => {
               console.log(note);
+              addActiveBg(note.Id);
               console.log(JSON.parse(note.note));
               props.setActiveNote(JSON.parse(note.note));
               props.setActiveNoteId(note.Id);

@@ -161,3 +161,7 @@ iframe {
   width: 100%;
   -webkit-app-region: drag;
 }
+
+.highlightSelected {
+  background-color: rgb(27, 27, 27) !important;
+}
