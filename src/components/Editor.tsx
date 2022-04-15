@@ -1,3 +1,4 @@
+// @refresh reset
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, useSlate, Slate, ReactEditor } from 'slate-react';
@@ -10,7 +11,7 @@ import {
 } from 'slate';
 import { withHistory } from 'slate-history';
 
-import { Button, Icon, Toolbar } from './components';
+import { Icon, Toolbar } from './components';
 import axios from 'axios';
 import Note from 'types/note';
 
@@ -19,6 +20,7 @@ const HOTKEYS = {
   'mod+i': 'italic',
   'mod+u': 'underline',
   'mod+`': 'code',
+  'mod+h': 'heading-two',
 };
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -44,15 +46,17 @@ const RichTextExample = (props: any) => {
       console.log(props.activeNoteId);
       editor.children = props.activeNote;
       setNote(props?.activeNote);
+      initialValue = props.notes[0].note;
     }
   }, [props]);
 
-  const initialValue = useMemo<Descendant[]>(
+  let initialValue = useMemo<Descendant[]>(
     () =>
-      props?.activeNote?.note || [
+      props?.activeNote?.note ||
+      props?.notes[0]?.note || [
         {
           type: 'paragraph',
-          children: [{ text: 'A line of text in a paragraph.' }],
+          children: [{ text: '' }],
         },
       ],
     []
@@ -102,11 +106,15 @@ const RichTextExample = (props: any) => {
       }}
     >
       <Toolbar>
-        <MarkButton format="bold" icon="format_bold" />
-        <MarkButton format="italic" icon="format_italic" />
-        <MarkButton format="underline" icon="format_underlined" />
-        <MarkButton format="code" icon="code" />
-        <BlockButton format="heading-one" icon="looks_one" />
+        {/* <MarkButton editor={editor} format="bold" icon="format_bold" />
+        <MarkButton editor={editor} format="italic" icon="format_italic" />
+        <MarkButton
+          editor={editor}
+          format="underline"
+          icon="format_underlined"
+        />
+        <MarkButton editor={editor} format="code" icon="code" /> */}
+        {/* <BlockButton format="heading-one" icon="looks_one" />
         <BlockButton format="heading-two" icon="looks_two" />
         <BlockButton format="block-quote" icon="format_quote" />
         <BlockButton format="numbered-list" icon="format_list_numbered" />
@@ -114,12 +122,12 @@ const RichTextExample = (props: any) => {
         <BlockButton format="left" icon="format_align_left" />
         <BlockButton format="center" icon="format_align_center" />
         <BlockButton format="right" icon="format_align_right" />
-        <BlockButton format="justify" icon="format_align_justify" />
+        <BlockButton format="justify" icon="format_align_justify" /> */}
       </Toolbar>
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
+        placeholder="Start writing to create a new note.."
         spellCheck
         autoFocus
         onKeyDown={(event) => {
@@ -128,6 +136,9 @@ const RichTextExample = (props: any) => {
               event.preventDefault();
               const mark = HOTKEYS[hotkey];
               toggleMark(editor, mark);
+              if (mark == 'heading-two') {
+                toggleBlock(editor, mark);
+              }
             }
           }
         }}
@@ -172,11 +183,12 @@ const toggleBlock = (editor, format) => {
 
 const toggleMark = (editor, format) => {
   const isActive = isMarkActive(editor, format);
-
   if (isActive) {
     Editor.removeMark(editor, format);
+    console.log(editor);
   } else {
     Editor.addMark(editor, format, true);
+    console.log(editor);
   }
 };
 
@@ -270,8 +282,7 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const BlockButton = ({ format, icon }) => {
-  const editor = useSlate();
+const BlockButton = ({ format, icon, editor }) => {
   return (
     <Button
       active={isBlockActive(
@@ -289,18 +300,34 @@ const BlockButton = ({ format, icon }) => {
   );
 };
 
-const MarkButton = ({ format, icon }: any) => {
-  const editor = useSlate();
+const MarkButton = ({ format, icon, editor }: any) => {
+  const [btnStatus, setBtnStatus] = useState(false);
+
+  const isActive = isMarkActive(editor, format);
   return (
     <Button
-      active={isMarkActive(editor, format)}
-      onMouseDown={(event) => {
+      editor={editor}
+      icon={icon}
+      format={format}
+      active={isActive}
+      setBtnStatus={setBtnStatus}
+      btnStatus={btnStatus}
+    ></Button>
+  );
+};
+
+const Button = ({ editor, active, format, icon, setBtnStatus, btnStatus }) => {
+  return (
+    <div
+      onClick={(event: Event) => {
         event.preventDefault();
+        setBtnStatus(!btnStatus);
         toggleMark(editor, format);
       }}
+      className={active ? 'lightBtn' : 'darkBtn'}
     >
       <Icon props={icon}></Icon>
-    </Button>
+    </div>
   );
 };
 

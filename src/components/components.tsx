@@ -21,97 +21,91 @@ interface BaseProps {
 }
 // type OrNull<T> = T | null;
 
-export const Button = React.forwardRef(
-  (
-    {
+export const Button = ({
+  className,
+  active,
+  reversed,
+  ...props
+}: PropsWithChildren<
+  {
+    active: boolean;
+    reversed: boolean;
+  } & BaseProps
+>) => (
+  <span
+    {...props}
+    className={cx(
       className,
-      active,
-      reversed,
-      ...props
-    }: PropsWithChildren<
-      {
-        active: boolean;
-        reversed: boolean;
-      } & BaseProps
-    >,
-    ref: Ref<HTMLSpanElement>
-  ) => (
-    <span
-      {...props}
-      ref={ref}
-      className={cx(
-        className,
-        css`
-          cursor: pointer;
-          color: ${reversed
-            ? active
-              ? 'white'
-              : '#aaa'
-            : active
-            ? 'black'
-            : '#ccc'};
-        `
-      )}
-    />
-  )
+      css`
+        cursor: pointer;
+        color: ${reversed
+          ? active
+            ? 'white'
+            : '#aaa'
+          : active
+          ? 'black'
+          : '#ccc'};
+      `
+    )}
+  />
 );
 
-export const EditorValue = React.forwardRef(
-  (
-    {
-      className,
-      value,
-      ...props
-    }: PropsWithChildren<
-      {
-        value: any;
-      } & BaseProps
-    >,
-    ref: Ref<HTMLDivElement>
-  ) => {
-    const textLines = value.document.nodes
-      .map((node: { text: any }) => node.text)
-      .toArray()
-      .join('\n');
-    return (
-      <div
-        ref={ref}
-        {...props}
-        className={cx(
-          className,
-          css`
-            margin: 30px -20px 0;
-          `
-        )}
-      >
-        <div
-          className={css`
-            font-size: 14px;
-            padding: 5px 20px;
-            color: #404040;
-            border-top: 2px solid #eeeeee;
-            background: #f8f8f8;
-          `}
-        >
-          Slate's value as text
-        </div>
-        <div
-          className={css`
-            color: #404040;
-            font: 12px monospace;
-            white-space: pre-wrap;
-            padding: 10px 20px;
-            div {
-              margin: 0 0 0.5em;
-            }
-          `}
-        >
-          {textLines}
-        </div>
-      </div>
-    );
-  }
-);
+// export const EditorValue = React.forwardRef(
+//   (
+//     {
+//       className,
+//       value,
+//       ...props
+//     }: PropsWithChildren<
+//       {
+//         value: any;
+//       } & BaseProps
+//     >,
+//     ref: Ref<HTMLDivElement>
+//   ) => {
+//     const textLines = value.document.nodes
+//       .map((node: { text: any }) => node.text)
+//       .toArray()
+//       .join('\n');
+//     return (
+//       <div
+//         ref={ref}
+//         {...props}
+//         className={cx(
+//           className,
+//           css`
+//             margin: 30px -20px 0;
+//           `
+//         )}
+//       >
+//         <div
+//           className={css`
+//             font-size: 14px;
+//             padding: 5px 20px;
+//             color: #404040;
+//             border-top: 2px solid #eeeeee;
+//             background: #f8f8f8;
+//           `}
+//         >
+//           Slate's value as text
+//         </div>
+//         <div
+//           className={css`
+//             color: #404040;
+//             font: 12px monospace;
+//             white-space: pre-wrap;
+//             padding: 10px 20px;
+//             div {
+//               margin: 0 0 0.5em;
+//             }
+//           `}
+//         >
+//           {textLines}
+//         </div>
+//       </div>
+//     );
+//   }
+// );
 
 export const Icon = (props: any) => {
   if (props.props == 'format_quote') {
@@ -205,6 +199,8 @@ export const Menu = React.forwardRef(
     />
   )
 );
+
+export const Test = (editor, buttonState) => {};
 
 export const Portal = ({ children }: any) => {
   return typeof document === 'object'

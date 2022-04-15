@@ -15,10 +15,21 @@ const Hello = (props: any) => {
   const [activeNoteId, setActiveNoteId] = useState('');
   useEffect(() => {
     dayjs.extend(customParseFormat);
-    axios
-      .get('http://localhost:7071/api/GetNotes')
-      .then((r) => setNotes(r.data));
+    axios.get('http://localhost:7071/api/GetNotes').then((r) => {
+      console.log(r.data);
+      setNotes(r.data);
+    });
+    console.log(notes);
   }, [activeNote, activeNoteId]);
+
+  useEffect(() => {
+    dayjs.extend(customParseFormat);
+    axios.get('http://localhost:7071/api/GetNotes').then((r) => {
+      console.log(r.data);
+      setNotes(r.data);
+    });
+    console.log(notes);
+  }, []);
 
   return (
     <div className="mainContainer">
@@ -32,7 +43,11 @@ const Hello = (props: any) => {
       <div className="editorContainer">
         <div className="titleBar"></div>
         <div className="editor">
-          <MyEditor activeNote={activeNote} activeNoteId={activeNoteId} />
+          <MyEditor
+            notes={notes}
+            activeNote={activeNote}
+            activeNoteId={activeNoteId}
+          />
         </div>
       </div>
     </div>

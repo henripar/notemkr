@@ -11,9 +11,14 @@
   padding: 1rem;
   box-sizing: border-box;
 }
+.noteHeaderContainer {
+  overflow: hidden;
+  color: rgba(98, 223, 196, 0.939);
+}
 
 .noteCard h4 {
   margin: 0;
+  font-weight: 400 !important;
 }
 
 .noteCard:hover {
@@ -82,4 +87,10 @@
 
 .noteCardsContainer::-webkit-scrollbar-corner {
   background: rgba(0, 0, 0, 0);
+}
+
+.clampLines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }

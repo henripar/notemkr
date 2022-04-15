@@ -165,3 +165,11 @@ iframe {
 .highlightSelected {
   background-color: rgb(27, 27, 27) !important;
 }
+
+.darkBtn {
+  color: black;
+}
+
+.lightBtn {
+  color: white;
+}
