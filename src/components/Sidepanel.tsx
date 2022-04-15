@@ -8,7 +8,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Note from '../types/note';
 
 function Sidepanel(props: any) {
-  const [t, test] = useState<string>();
+  const [search, setSearch] = useState<string>('');
   const [selectedNote, setSeletedNote] = useState('');
   const addActiveBg = (id: string) => {
     let note = document.getElementById(id);
@@ -26,6 +26,8 @@ function Sidepanel(props: any) {
       <input
         type="text"
         placeholder="Search.."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         className={styles.searchInput}
       />
       <div className={styles.buttonContainer}>
@@ -39,26 +41,28 @@ function Sidepanel(props: any) {
                 (n: any, i: any) =>
                   new Date(i.date).getTime() - new Date(n.date).getTime()
               )
-              .map((note: Note) => (
-                <div
-                  className={styles.noteCard}
-                  id={note.Id}
-                  onClick={() => {
-                    console.log(note);
-                    addActiveBg(note.Id);
-                    console.log(JSON.parse(note.note));
-                    props.setActiveNote(JSON.parse(note.note));
-                    props.setActiveNoteId(note.Id);
-                  }}
-                >
-                  <div className={styles.noteHeaderContainer}>
-                    <h4 className={styles.clampLines}>
-                      {JSON.parse(note?.note)[0]?.children[0]?.text}
-                    </h4>
+              .map((note: Note) =>
+                note.note.includes(search) ? (
+                  <div
+                    className={styles.noteCard}
+                    id={note.Id}
+                    onClick={() => {
+                      console.log(note);
+                      addActiveBg(note.Id);
+                      console.log(JSON.parse(note.note));
+                      props.setActiveNote(JSON.parse(note.note));
+                      props.setActiveNoteId(note.Id);
+                    }}
+                  >
+                    <div className={styles.noteHeaderContainer}>
+                      <h4 className={styles.clampLines}>
+                        {JSON.parse(note?.note)[0]?.children[0]?.text}
+                      </h4>
+                    </div>
+                    <span>{dayjs(note?.date).format('D.M.YYYY')}</span>
                   </div>
-                  <span>{dayjs(note?.date).format('D.M.YYYY')}</span>
-                </div>
-              ))
+                ) : null
+              )
           : null}
       </div>
     </div>
