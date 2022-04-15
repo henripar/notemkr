@@ -13,6 +13,8 @@ const Hello = (props: any) => {
   const [notes, setNotes] = useState([]);
   const [activeNote, setActiveNote] = useState();
   const [activeNoteId, setActiveNoteId] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   useEffect(() => {
     dayjs.extend(customParseFormat);
     axios.get('http://localhost:7071/api/GetNotes').then((r) => {
@@ -37,7 +39,9 @@ const Hello = (props: any) => {
         notes={notes}
         setActiveNote={setActiveNote}
         setActiveNoteId={setActiveNoteId}
+        activeNoteId={activeNoteId}
         setNotes={setNotes}
+        setShowDeleteModal={setShowDeleteModal}
         className="sidepanel"
       ></Sidepanel>
       <div className="editorContainer">

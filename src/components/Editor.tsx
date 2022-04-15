@@ -1,4 +1,3 @@
-// @refresh reset
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, useSlate, Slate, ReactEditor } from 'slate-react';
@@ -15,12 +14,30 @@ import { Icon, Toolbar } from './components';
 import axios from 'axios';
 import Note from 'types/note';
 
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
+import FormatBoldIcon from '@mui/icons-material/FormatBold';
+import FormatItalicIcon from '@mui/icons-material/FormatItalic';
+import CodeIcon from '@mui/icons-material/Code';
+import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
+import LooksOneIcon from '@mui/icons-material/LooksOne';
+import LooksTwoIcon from '@mui/icons-material/LooksTwo';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
+
+import KeyboardCommandKeyIcon from '@mui/icons-material/KeyboardCommandKey';
+
 const HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',
   'mod+u': 'underline',
   'mod+`': 'code',
-  'mod+h': 'heading-two',
+  'mod+h+1': 'heading-one',
+  'mod+h+2': 'heading-two',
+  'mod+option+c': 'center',
+  'mod+option+r': 'right',
+  'mod+option+l': 'left',
+  'mod+h': '',
 };
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
@@ -28,6 +45,7 @@ const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 
 const RichTextExample = (props: any) => {
   const [note, setNote] = useState();
+  const [keyboardMenu, setKeyboardMenu] = useState(false);
 
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
@@ -139,10 +157,75 @@ const RichTextExample = (props: any) => {
               if (mark == 'heading-two') {
                 toggleBlock(editor, mark);
               }
+              if (mark == 'heading-one') {
+                toggleBlock(editor, mark);
+              }
+              if (mark == 'center') {
+                toggleBlock(editor, mark);
+              }
+              if (mark == 'right') {
+                toggleBlock(editor, mark);
+              }
+              if (mark == 'left') {
+                toggleBlock(editor, mark);
+              }
             }
           }
         }}
       />
+      <KeyboardCommandKeyIcon
+        className="keyboardShortcutIcon"
+        onClick={() => setKeyboardMenu(!keyboardMenu)}
+      />
+      {keyboardMenu ? (
+        <div className="keyboardShortcutList">
+          <div className="keyboardShotcutListItem">
+            <FormatBoldIcon></FormatBoldIcon>
+            <span className="bold">Bold</span>
+            <span className="shortcutCommand">&#8984; + b</span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <FormatItalicIcon></FormatItalicIcon>
+            <span className="italic">Italic</span>
+            <span className="shortcutCommand">&#8984; + i </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <FormatUnderlinedIcon></FormatUnderlinedIcon>
+            <span className="underline">Underline</span>
+            <span className="shortcutCommand">&#8984; + u </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <CodeIcon></CodeIcon>
+            <span className="code">Code</span>
+            <span className="shortcutCommand">&#8984; + ` </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <LooksOneIcon></LooksOneIcon>
+            <span className="header1">Header 1</span>
+            <span className="shortcutCommand">&#8984; + h + 1 </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <LooksTwoIcon></LooksTwoIcon>
+            <span className="header2">Header 2</span>
+            <span className="shortcutCommand">&#8984; + h + 2 </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <FormatAlignCenterIcon></FormatAlignCenterIcon>
+            <span className="format">Align Center</span>
+            <span className="shortcutCommand">&#8984; + &#8997; + m </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <FormatAlignRightIcon></FormatAlignRightIcon>
+            <span className="format">Align Right</span>
+            <span className="shortcutCommand">&#8984; + &#8997; + r </span>
+          </div>
+          <div className="keyboardShotcutListItem">
+            <FormatAlignLeftIcon></FormatAlignLeftIcon>
+            <span className="format">Align Left</span>
+            <span className="shortcutCommand">&#8984; + &#8997; + l </span>
+          </div>
+        </div>
+      ) : null}
     </Slate>
   );
 };

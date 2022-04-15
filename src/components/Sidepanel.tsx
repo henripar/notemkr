@@ -20,6 +20,45 @@ function Sidepanel(props: any) {
     setSeletedNote(id);
   };
 
+  const openDeleteNoteModal = () => {
+    props.setShowDeleteModal(true);
+  };
+
+  const createNewNote = () => {
+    props.setActiveNote([
+      {
+        type: 'paragraph',
+        children: [{ text: '' }],
+      },
+    ]);
+    props.setActiveNoteId('');
+  };
+
+  const deleteNote = () => {
+    axios
+      .post(
+        'http://localhost:7071/api/DeleteNote',
+        {
+          noteid: props.activeNoteId,
+        },
+        {
+          headers: {
+            'Content-Type': 'text/plain',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      )
+      .then((res) => {
+        props.setActiveNote([
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ]);
+        props.setActiveNoteId('');
+      });
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className="titleBar"></div>
@@ -31,8 +70,14 @@ function Sidepanel(props: any) {
         className={styles.searchInput}
       />
       <div className={styles.buttonContainer}>
-        <NoteAddIcon className={styles.icon}></NoteAddIcon>
-        <DeleteIcon className={styles.icon}></DeleteIcon>
+        <NoteAddIcon
+          onClick={() => createNewNote()}
+          className={styles.icon}
+        ></NoteAddIcon>
+        <DeleteIcon
+          onClick={() => deleteNote()}
+          className={styles.icon}
+        ></DeleteIcon>
       </div>
       <div className={styles.noteCardsContainer}>
         {props.notes
@@ -44,6 +89,7 @@ function Sidepanel(props: any) {
               .map((note: Note) =>
                 note.note.includes(search) ? (
                   <div
+                    key={note.Id}
                     className={styles.noteCard}
                     id={note.Id}
                     onClick={() => {

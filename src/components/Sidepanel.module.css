@@ -5,11 +5,11 @@
 }
 
 .noteCard {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.152);
   border-top: 1px solid rgba(255, 255, 255, 0.152);
   color: rgba(255, 255, 255, 0.604);
   padding: 1rem;
   box-sizing: border-box;
+  cursor: pointer;
 }
 .noteHeaderContainer {
   overflow: hidden;
@@ -22,7 +22,7 @@
 }
 
 .noteCard:hover {
-  background: rgb(27, 27, 27);
+  background: rgba(255, 255, 255, 0.071);
 }
 
 .searchInput {

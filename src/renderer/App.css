@@ -163,7 +163,7 @@ iframe {
 }
 
 .highlightSelected {
-  background-color: rgb(27, 27, 27) !important;
+  background-color: rgba(25, 51, 52, 0.612) !important;
 }
 
 .darkBtn {
@@ -172,4 +172,80 @@ iframe {
 
 .lightBtn {
   color: white;
+}
+
+.keyboardShortcutIcon {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  background-color: rgba(170, 170, 170, 0.287);
+  border-radius: 50%;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.keyboardShortcutList {
+  position: absolute;
+  right: 30px;
+  top: 100px;
+  z-index: 100;
+  background-color: white;
+  animation-name: example;
+  animation-duration: 0.5s;
+}
+@keyframes example {
+  from {
+    transform: translateX(320px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.keyboardShotcutListItem {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin: 0.5rem;
+}
+
+.bold {
+  font-weight: 500;
+  margin: 0 1rem;
+}
+
+.italic {
+  font-style: italic;
+  margin: 0 1rem;
+}
+
+.underline {
+  text-decoration: underline;
+  margin: 0 1rem;
+}
+.code {
+  background-color: rgba(170, 170, 170, 0.287);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin: 0 1rem;
+}
+
+.header1 {
+  margin: 0 1rem;
+  font-size: 20px;
+}
+
+.header2 {
+  margin: 0 1rem;
+  font-size: 18px;
+}
+
+.format {
+  margin: 0 1rem;
+}
+
+.shortcutCommand {
+  background-color: rgba(170, 170, 170, 0.287);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
 }
