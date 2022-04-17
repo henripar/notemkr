@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { v4 as uuidv4 } from 'uuid';
 import Note from '../types/note';
 
 function Sidepanel(props: any) {
@@ -31,7 +32,22 @@ function Sidepanel(props: any) {
         children: [{ text: '' }],
       },
     ]);
-    props.setActiveNoteId('');
+    const id = uuidv4();
+    props.setIsNewNote(true);
+    props.setActiveNoteId(id);
+    props.setNotes([
+      ...props.notes,
+      {
+        note: [
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ],
+        Id: id,
+        date: new Date().toLocaleString(),
+      },
+    ]);
   };
 
   const deleteNote = () => {

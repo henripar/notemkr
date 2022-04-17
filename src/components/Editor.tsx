@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  Children,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import isHotkey from 'is-hotkey';
 import { Editable, withReact, useSlate, Slate, ReactEditor } from 'slate-react';
 import {
@@ -9,6 +15,7 @@ import {
   Element as SlateElement,
 } from 'slate';
 import { withHistory } from 'slate-history';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Icon, Toolbar } from './components';
 import axios from 'axios';
@@ -26,6 +33,8 @@ import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
 
 import KeyboardCommandKeyIcon from '@mui/icons-material/KeyboardCommandKey';
+import { text } from 'stream/consumers';
+import { Notes } from '@mui/icons-material';
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -64,7 +73,7 @@ const RichTextExample = (props: any) => {
       console.log(props.activeNoteId);
       editor.children = props.activeNote;
       setNote(props?.activeNote);
-      initialValue = props.notes[0].note;
+      // initialValue = props.notes[0].note;
     }
   }, [props]);
 
@@ -97,29 +106,92 @@ const RichTextExample = (props: any) => {
       editor={editor}
       value={initialValue}
       onChange={(value) => {
+        console.log(value);
+        console.log(editor.selection);
+        // console.log(
+        //   value[value.length - 1].children[children.length].text[text.length]
+        // );
+
+        // const children = props?.activeNote[0]?.children.length - 1;
+        // const test = props.activeNote.length - 1;
+        // const point = {
+        //   path: [test, children],
+        //   offset: props?.activeNote[test]?.children[children]?.text.length ?? 0,
+        // };
+        // editor.selection = {
+        //   anchor: point,
+        //   focus: point,
+        // };
+
         const isAstChange = editor.operations.some(
           (op) => 'set_selection' !== op.type
         );
+        console.log(editor.operations);
+        props.setActiveNote(value);
+
         if (isAstChange) {
-          // Save the value to Local Storage.
-          const content = JSON.stringify(value);
-          localStorage.setItem('content', content);
-          axios
-            .post(
-              'http://localhost:7071/api/AddNote',
+          if (props?.activeNote[0]?.children[0]?.text == '') {
+            console.log('PERKELE');
+            // Save the value to Local Storage.
+            const content = JSON.stringify(value);
+            localStorage.setItem('content', content);
+
+            // const point = { path: [0, 0], offset: 0 };
+            // editor.selection = { anchor: point, focus: point };
+
+            props.setNotes([
+              ...props.notes,
               {
                 note: content,
-                testi: 'lol',
-                noteid: props.activeNoteId,
+                Id: props.activeNoteId,
+                date: new Date().toLocaleString(),
               },
-              {
-                headers: {
-                  'Content-Type': 'text/plain',
-                  'Access-Control-Allow-Origin': '*',
+            ]);
+
+            axios
+              .post(
+                'http://localhost:7071/api/AddNote',
+                {
+                  note: content,
+                  noteid: props.activeNoteId,
                 },
-              }
-            )
-            .then((r) => console.log(r.data));
+                {
+                  headers: {
+                    'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                  },
+                }
+              )
+              .then((r) => {});
+          } else {
+            const content = JSON.stringify(value);
+            axios
+              .post(
+                'http://localhost:7071/api/EditNote',
+                {
+                  note: content,
+                  testi: 'lol',
+                  noteid: props.activeNoteId,
+                },
+                {
+                  headers: {
+                    'Content-Type': 'text/plain',
+                    'Access-Control-Allow-Origin': '*',
+                  },
+                }
+              )
+              .then((r) => {
+                // const point = {
+                //   path: [0, 0],
+                //   offset:
+                //     props?.activeNote[0]?.children[0]?.text.length + 1 ?? 1,
+                // };
+                // editor.selection = {
+                //   anchor: point,
+                //   focus: point,
+                // };
+              });
+          }
         }
       }}
     >

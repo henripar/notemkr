@@ -6,14 +6,21 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 import Note from '../types/note';
 
 const Hello = (props: any) => {
   const [notes, setNotes] = useState([]);
-  const [activeNote, setActiveNote] = useState();
-  const [activeNoteId, setActiveNoteId] = useState('');
+  const [activeNote, setActiveNote] = useState([
+    {
+      type: 'paragraph',
+      children: [{ text: '' }],
+    },
+  ]);
+  const [activeNoteId, setActiveNoteId] = useState(uuidv4());
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isNewNote, setIsNewNote] = useState(true);
 
   useEffect(() => {
     dayjs.extend(customParseFormat);
@@ -42,6 +49,7 @@ const Hello = (props: any) => {
         activeNoteId={activeNoteId}
         setNotes={setNotes}
         setShowDeleteModal={setShowDeleteModal}
+        setIsNewNote={setIsNewNote}
         className="sidepanel"
       ></Sidepanel>
       <div className="editorContainer">
@@ -51,6 +59,11 @@ const Hello = (props: any) => {
             notes={notes}
             activeNote={activeNote}
             activeNoteId={activeNoteId}
+            setActiveNoteId={setActiveNoteId}
+            setActiveNote={setActiveNote}
+            setIsNewNote={setIsNewNote}
+            isNewNote={isNewNote}
+            setNotes={setNotes}
           />
         </div>
       </div>

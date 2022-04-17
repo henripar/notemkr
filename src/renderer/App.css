@@ -163,7 +163,7 @@ iframe {
 }
 
 .highlightSelected {
-  background-color: rgba(25, 51, 52, 0.612) !important;
+  background-color: #121b23 !important;
 }
 
 .darkBtn {
@@ -248,4 +248,8 @@ iframe {
   background-color: rgba(170, 170, 170, 0.287);
   border-radius: 10px;
   padding: 0.5rem 1rem;
+}
+
+::selection {
+  background-color: rgba(98, 223, 196, 0.346);
 }
